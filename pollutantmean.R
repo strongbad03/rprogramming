@@ -1,59 +1,48 @@
-# set environment
-setwd('C:\\Users\\joshuat\\Documents\\JHU courses\\R programming\\rprog-data-specdata\\specdata')
-
-columnMean <- function(x, byeNAs = TRUE) {
-    nc <- ncol(x)
-    means <- numeric(nc)
-    for(i in 1:nc){
-        means [i] <- mean(x[, i], na.rm = byeNAs) 
-    }
-    means
+pollutantmean <- function(directory, pollutant, id = 1:332) {
+  # set working directory
+  setwd(directory)
+  
+  # get only id'd files
+  files <- list.files(pattern='.csv') [id]    
+  # files
+  
+  tables <- lapply(files, read.csv, header = TRUE)
+  bigtable <- do.call(rbind, tables)
+  # nrow(bigtable)
+  bad <- is.na(bigtable [pollutant])
+  # head(bad)
+  readings <- bigtable [!bad, ]
+  # nrow(readings)
+  # head(readings)
+  mean(readings [[pollutant]])
+  
 }
 
-pollutantmean <- function(directory = getwd(), pollutant, id = 1:10) {
-# only grab relevant monitors' files
-    files <- list.files(path = directory, pattern='.csv') [id]
-    files
-    nfiles <- length(files)
-    nfiles
-    
-# create empty vector for storing good data
-    goodobs <- vector()
-    
-# iterates over files
-    for(i in 1:nfiles) { 
-        f <- read.csv(files[i], header=T, quote="\"")
-        head(f)
-        bad <- is.na(f [pollutant])
-        head(bad)
-        readings <- list(f [!bad,])
-        head(readings)
-        
-        # save good readings for later
-        goodobs [i] <- rbind(readings)
-        head(goodobs)
-        
-    }
-    mean(goodobs[,pollutant])
-}
-    
-    ## 'directory' is a character vector of length 1 indicating
-    ## the location of the CSV files
-    list.files
-    
-    
-    ## 'pollutant' is a character vector of length 1 indicating
-    ## the name of the pollutant for which we will calculate the
-    ## mean; either "sulfate" or "nitrate".
+# Abandoned for loop method
+#   create empty vector for storing good data
+#   goodobs <- data.frame(date = character(0), sulfate = numeric(0), nitrate = numeric(0), ID = integer(0), stringsAsFactors=FALSE)
 
-    
-    
-    
-    ## 'id' is an integer vector indicating the monitor ID numbers
-    ## to be used
-    
-    ## Return the mean of the pollutant across all monitors list
-    ## in the 'id' vector (ignoring NA values)
-    ## NOTE: Do not round the result!
-}
+#   # only grab relevant monitors' files
+#   files <- list.files(pattern='.csv') [id]
+#   files
+#   nfiles <- length(files)
+#   nfiles
 
+#   # reads in files, ids good and bad records
+#   for(i in 1:nfiles) { 
+#     f <- read.csv(files[i], header=T, quote="\"")
+#     head(f)
+#     nrow(f)
+#     bad <- is.na(f [pollutant])
+#     head(bad)
+#     readings <- f [!bad, ]
+#     head(readings)
+#     nrow(readings)
+#     
+#     # save good readings for later
+#     goodobs [i] <- rbind(readings)
+#     head(goodobs)
+#     
+#   }
+#   mean(goodobs[,pollutant])
+# }
