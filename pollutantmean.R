@@ -1,11 +1,12 @@
 pollutantmean <- function(directory, pollutant, id = 1:332) {
-  # set working directory
+  ## set working directory
   setwd(directory)
   
-  # get only id'd files
+  ## get only id'd files
   files <- list.files(pattern='.csv') [id]    
   # files
   
+  ## make a big table and filter it 
   tables <- lapply(files, read.csv, header = TRUE)
   bigtable <- do.call(rbind, tables)
   # nrow(bigtable)
@@ -15,7 +16,6 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
   # nrow(readings)
   # head(readings)
   mean(readings [[pollutant]])
-  
 }
 
 # Abandoned for loop method
